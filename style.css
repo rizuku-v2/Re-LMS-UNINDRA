@@ -361,12 +361,18 @@ html.rizuki-reborn-active body.sidebar-collapse .main-sidebar {
   transform: translateX(calc(-1 * var(--rb-sidebar-w))) !important;
 }
 
-/* Content / footer offset */
-html.rizuki-reborn-active .content-wrapper,
-html.rizuki-reborn-active .main-footer {
+/* Content offset — FIX BUG 1: Pisah rule, main-footer TIDAK boleh dapat padding-top */
+html.rizuki-reborn-active .content-wrapper {
   margin-left     : var(--rb-sidebar-w) !important;
   padding-top     : var(--rb-header-h) !important;
+  position        : relative !important; /* FIX BUG 1C: bentuk stacking context sendiri */
   min-height      : calc(100vh - var(--rb-header-h)) !important;
+  background-color: var(--rb-bg) !important;
+  transition      : margin-left var(--rb-dur) var(--rb-ease) !important;
+}
+/* Footer offset — TANPA padding-top */
+html.rizuki-reborn-active .main-footer {
+  margin-left     : var(--rb-sidebar-w) !important;
   background-color: var(--rb-bg) !important;
   transition      : margin-left var(--rb-dur) var(--rb-ease) !important;
 }
@@ -479,8 +485,10 @@ html.rizuki-reborn-active .sidebar-menu .treeview-menu > li > a:hover {
   border    : none !important;
   list-style: none !important; font-size: 12.5px !important;
 }
-/* Kill Bootstrap default separator */
-.rb-breadcrumb > li + li::before { content: none !important; display: none !important; }
+/* FIX BUG 2A: Tambah prefix agar specificity mengalahkan Bootstrap 3 */
+html.rizuki-reborn-active .rb-breadcrumb > li + li::before { content: none !important; display: none !important; }
+/* Tambahan: kill selector Bootstrap 3 asli secara eksplisit */
+html.rizuki-reborn-active .breadcrumb > li + li::before    { content: none !important; display: none !important; }
 
 .rb-crumb-item {
   display    : flex; align-items: center;

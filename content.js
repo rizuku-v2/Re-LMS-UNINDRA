@@ -423,7 +423,7 @@ function injectDynamicThemeStyle(dark) {
     html.rizuki-reborn-active .breadcrumb { background: transparent !important; }
   `;
 
-  el.textContent = dark ? dark_css : dark_css; // Use the variable
+  el.textContent = dark_css;
 }
 
 function applyTheme(dark) {
@@ -554,7 +554,10 @@ function detectPage() {
   const isInbox     = p.includes('/pesanmasuk');
   const isDashboard = p === '/member' || p === '/member/home' || p.endsWith('/home') || p.includes('/dashboard');
   const isPresensi  = p.includes('/presensi');
-  const isPertemuan = p.includes('/pertemuan/');
+  // FIX BUG 4: Bedakan daftar sesi vs detail sesi agar tidak di-redesign sama
+  const isPertemuanList   = p.includes('/pertemuan/plist');
+  const isPertemuanDetail = p.includes('/pertemuan/pke/');
+  const isPertemuan       = isPertemuanDetail; // hanya halaman detail yang butuh redesignKelasPage
   const isForum     = p.includes('/member_forum/');
   const isTugas     = p.includes('/member_tugas/');
   const isProfil    = p.includes('/profil') || p.includes('/profile');
@@ -564,7 +567,8 @@ function detectPage() {
 
   return {
     isLoginOld, isLoginNew, isForgot, isReset,
-    isInbox, isDashboard, isPresensi, isPertemuan,
+    isInbox, isDashboard, isPresensi,
+    isPertemuan, isPertemuanList, isPertemuanDetail,
     isForum, isTugas, isProfil, isApp, isLoginPage, isAuthPage,
   };
 }
@@ -1426,18 +1430,28 @@ function _processBreadcrumbs() {
   const bc = contentHeader.querySelector('.breadcrumb, ol.breadcrumb, ul.breadcrumb');
   if (!bc) return;
 
-  // Guard: sudah diproses
-  if (bc.classList.contains('rb-breadcrumb')) return;
+  // FIX BUG 2B: Clear float pada parent container AdminLTE (.col-sm-6.pull-right)
+  // agar breadcrumb tidak jatuh/tumpang tindih dengan judul halaman
+  const parentPullRight = bc.closest('.col-sm-6.pull-right, .pull-right');
+  if (parentPullRight) {
+    Object.assign(parentPullRight.style, { float: 'none', clear: 'both', width: '100%' });
+  }
+
   bc.classList.add('rb-breadcrumb');
 
   const items = [...bc.querySelectorAll('li')];
   items.forEach((li, i) => {
+    // FIX BUG 2D: Guard per-item, bukan per-breadcrumb, agar AJAX partial re-process bisa jalan
+    if (li.classList.contains('rb-crumb-item')) return;
+
     li.classList.add('rb-crumb-item');
     li.classList.remove('active');
 
     const link = li.querySelector('a');
     if (i === 0 && link && /home|beranda/i.test(link.textContent)) {
-      if (!link.querySelector('svg')) {
+      // FIX BUG 2C: Cek apakah ikon fa-home atau SVG sudah ada sebelum inject
+      const alreadyHasIcon = link.querySelector('svg') || link.querySelector('.fa-home');
+      if (!alreadyHasIcon) {
         link.insertAdjacentHTML('afterbegin', `${ICON.home} `);
       }
     }
@@ -1538,30 +1552,51 @@ function redesignPresensiPage() {
 // §22 — KELAS / PERTEMUAN / FORUM / TUGAS
 // FIX: Hapus Assignment + redesign semua elemen
 // ═══════════════════════════════════════════════════════
+
+/**
+ * FIX BUG 3: Fungsi tersendiri agar bisa dipanggil ulang dari watchDynamicContent
+ * saat konten AJAX berubah (mencegah assignment muncul kembali setelah navigasi tab).
+ */
+function _hideAssignmentTabs() {
+  const contentWrapper = $('.content-wrapper');
+  if (!contentWrapper) return;
+  const ASSIGN_RE = /assignment/i;
+
+  $$('.nav-tabs li, .nav-pills li', contentWrapper).forEach(li => {
+    if (!ASSIGN_RE.test(li.textContent)) return;
+    li.style.display = 'none';
+    const anchor = li.querySelector('a[href], a[data-target]');
+    const paneId = (anchor?.getAttribute('href') || anchor?.getAttribute('data-target') || '')
+                     .replace(/^#/, '');
+    if (paneId) {
+      const pane = contentWrapper.querySelector('#' + CSS.escape(paneId));
+      if (pane) pane.style.display = 'none';
+    }
+    $$('[id*="assignment"], .tab-pane', contentWrapper).forEach(pane => {
+      if (ASSIGN_RE.test(pane.id || '') || ASSIGN_RE.test(pane.querySelector('.box-title, h3, h4')?.textContent || '')) {
+        pane.style.display = 'none';
+      }
+    });
+  });
+
+  $$('.box, .panel', contentWrapper).forEach(box => {
+    const title = box.querySelector('.box-title, .box-header h3, .box-header h4, .panel-heading h3');
+    if (title && ASSIGN_RE.test(title.textContent)) box.style.display = 'none';
+  });
+
+  $$('a, button', contentWrapper).forEach(el => {
+    if (ASSIGN_RE.test(el.textContent.trim())) {
+      el.closest('li, .btn-group, .action-item')?.style.setProperty('display', 'none');
+    }
+  });
+}
+
 function redesignKelasPage() {
   const contentWrapper = $('.content-wrapper');
   if (!contentWrapper) return;
 
-  // ── HAPUS ASSIGNMENT dari halaman pertemuan ──
-  // Semua nav-tab yang mengandung teks "assignment"
-  $$('.nav-tabs li, .nav-pills li', contentWrapper).forEach(li => {
-    if (/assignment/i.test(li.textContent)) {
-      li.style.display = 'none';
-    }
-  });
-  // Semua box/panel dengan judul assignment
-  $$('.box, .panel', contentWrapper).forEach(box => {
-    const title = box.querySelector('.box-title, .box-header h3, .box-header h4, .panel-heading h3');
-    if (title && /assignment/i.test(title.textContent)) {
-      box.style.display = 'none';
-    }
-  });
-  // Semua link berteks assignment
-  $$('a, button', contentWrapper).forEach(el => {
-    if (/\bassignment\b/i.test(el.textContent.trim())) {
-      el.closest('li, .btn-group, .action-item')?.style.setProperty('display', 'none');
-    }
-  });
+  // ── HAPUS ASSIGNMENT — delegate ke fungsi khusus (juga dipakai observer) ──
+  _hideAssignmentTabs();
 
   // ── STYLE MATERIAL ITEMS ──
   $$('.list-group-item, .mailbox-attachments li, .attachment-block').forEach(item => {
@@ -1834,7 +1869,22 @@ function activateBugFixes() {
   function defeatAdminLTE() {
     document.body.classList.remove(...skinClasses);
     if (document.body.style.paddingRight) document.body.style.paddingRight = '';
-    // Pastikan dynamic theme selalu inject ulang setelah AdminLTE coba balik
+
+    // FIX BUG 1B: Paksa margin-left yang benar pada .content-wrapper
+    // sehingga AdminLTE JS tidak bisa reset ulang ke margin-left: 230px
+    const cw = $('.content-wrapper');
+    if (cw) {
+      const collapsed = document.body.classList.contains('sidebar-collapse');
+      cw.style.setProperty('margin-left', collapsed ? '0' : 'var(--rb-sidebar-w)', 'important');
+    }
+    // Paksa main-footer juga mengikuti
+    const mf = $('.main-footer');
+    if (mf) {
+      const collapsed = document.body.classList.contains('sidebar-collapse');
+      mf.style.setProperty('margin-left', collapsed ? '0' : 'var(--rb-sidebar-w)', 'important');
+    }
+
+    // Selalu inject ulang dynamic theme agar AdminLTE tidak bisa balik
     injectDynamicThemeStyle(isDark());
   }
 
@@ -1853,6 +1903,17 @@ function activateBugFixes() {
       if (type === 'attributes' && attributeName === 'class') {
         const hasSkin = skinClasses.some(c => document.body.classList.contains(c));
         if (hasSkin) defeatAdminLTE();
+
+        // FIX BUG 1D: Proteksi sidebar-collapse state
+        // Jika AdminLTE menghapus/menambah sidebar-collapse di luar kendali kita,
+        // counter dengan state yang tersimpan di cookie/localStorage
+        const expectedOpen = Sidebar.isOpen();
+        const currentlyCollapsed = document.body.classList.contains('sidebar-collapse');
+        if (expectedOpen === currentlyCollapsed) {
+          // State tidak sinkron — paksa balik ke state yang tersimpan
+          Sidebar.apply();
+          defeatAdminLTE(); // Update margin-left setelah apply sidebar
+        }
       }
       if (type === 'attributes' && attributeName === 'style') {
         if (document.body.style.paddingRight) document.body.style.paddingRight = '';
@@ -1883,6 +1944,8 @@ function watchDynamicContent() {
       redesignTables();
       redesignForms();
       redesignModals();
+      // FIX BUG 3B: Panggil ulang hide assignment saat konten AJAX berubah
+      _hideAssignmentTabs();
     }, 300);
   });
 
@@ -1924,6 +1987,12 @@ function initAppPage(page) {
     setTimeout(redesignPresensiPage, 400);
     setTimeout(redesignPresensiPage, 900);
     setTimeout(redesignPresensiPage, 1800);
+
+  } else if (page.isPertemuanList) {
+    // FIX BUG 4: /pertemuan/plist/ hanya perlu redesign tabel daftar sesi, bukan kelas detail
+    redesignBoxes();
+    redesignTables();
+    setTimeout(() => { redesignBoxes(); redesignTables(); }, 500);
 
   } else if (page.isPertemuan || page.isForum || page.isTugas) {
     redesignKelasPage();
