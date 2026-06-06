@@ -1,0 +1,1381 @@
+/* ============================================================
+   LMS ULTRA REBORN v5.0 — style.css
+   by RizukiDesz | rizuku.my.id
+
+   CHANGELOG v5.0:
+   - FIX: Default light mode, variabel tema konsisten
+   - FIX: Dark mode tidak bertabrakan dengan AdminLTE
+   - FIX: Sidebar, header, footer seirama
+   - FIX: Breadcrumbs di semua halaman
+   - FIX: Dashboard pastel cards
+   - FIX: Presensi progress bar
+   - NEW: Profile hero section
+   - NEW: Box footer styling
+   - NEW: Clean code, zero redundancy
+   ============================================================ */
+
+/* ────────────────────────────────────────────────────────────
+   §0 — CSS VARIABLES  (Light mode = default :root)
+──────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --rb-bg        : #f1f5f9;
+  --rb-surface   : #ffffff;
+  --rb-surface-2 : #f8fafc;
+
+  /* Borders & text */
+  --rb-border      : #e2e8f0;
+  --rb-text        : #0f172a;
+  --rb-text-muted  : #64748b;
+  --rb-text-faint  : #94a3b8;
+
+  /* Brand / primary */
+  --rb-primary       : #3b82f6;
+  --rb-primary-hover : #2563eb;
+  --rb-primary-light : rgba(59, 130, 246, 0.10);
+  --rb-primary-glow  : rgba(59, 130, 246, 0.25);
+
+  /* Layout */
+  --rb-sidebar-w      : 260px;
+  --rb-sidebar-bg     : #ffffff;
+  --rb-sidebar-border : #e2e8f0;
+  --rb-header-h       : 64px;
+  --rb-header-bg      : #ffffff;
+  --rb-header-border  : #e2e8f0;
+  --rb-header-shadow  : 0 1px 4px rgba(0, 0, 0, 0.08);
+
+  /* Dashboard pastels */
+  --pastel-blue-bg    : #e0f2fe;  --pastel-blue-txt   : #0369a1;
+  --pastel-green-bg   : #dcfce7;  --pastel-green-txt  : #15803d;
+  --pastel-orange-bg  : #ffedd5;  --pastel-orange-txt : #c2410c;
+  --pastel-teal-bg    : #ccfbf1;  --pastel-teal-txt   : #0f766e;
+
+  /* Shadows */
+  --rb-shadow-xs : 0 1px 2px rgba(0, 0, 0, 0.05);
+  --rb-shadow-sm : 0 2px 8px rgba(0, 0, 0, 0.07);
+  --rb-shadow-md : 0 4px 16px rgba(0, 0, 0, 0.10);
+  --rb-shadow-lg : 0 10px 30px rgba(0, 0, 0, 0.12);
+  --rb-shadow-xl : 0 20px 60px rgba(0, 0, 0, 0.15);
+
+  /* Radii */
+  --rb-r-sm   : 8px;
+  --rb-r-md   : 12px;
+  --rb-r-lg   : 16px;
+  --rb-r-xl   : 20px;
+  --rb-r-full : 9999px;
+
+  /* Motion */
+  --rb-ease : cubic-bezier(0.4, 0, 0.2, 1);
+  --rb-dur  : 200ms;
+}
+
+/* ── Dark mode token overrides ── */
+html[data-theme="dark"],
+html.dark {
+  --rb-bg        : #0f172a;
+  --rb-surface   : #1e293b;
+  --rb-surface-2 : #162032;
+
+  --rb-border      : #334155;
+  --rb-text        : #f1f5f9;
+  --rb-text-muted  : #94a3b8;
+  --rb-text-faint  : #64748b;
+
+  --rb-primary       : #60a5fa;
+  --rb-primary-hover : #3b82f6;
+  --rb-primary-light : rgba(96, 165, 250, 0.12);
+  --rb-primary-glow  : rgba(96, 165, 250, 0.25);
+
+  --rb-sidebar-bg     : #1e293b;
+  --rb-sidebar-border : #334155;
+  --rb-header-bg      : #1e293b;
+  --rb-header-border  : #334155;
+  --rb-header-shadow  : 0 1px 3px rgba(0, 0, 0, 0.35);
+
+  --pastel-blue-bg    : rgba(14, 165, 233, 0.15);  --pastel-blue-txt   : #38bdf8;
+  --pastel-green-bg   : rgba(34, 197, 94, 0.15);   --pastel-green-txt  : #4ade80;
+  --pastel-orange-bg  : rgba(249, 115, 22, 0.15);  --pastel-orange-txt : #fb923c;
+  --pastel-teal-bg    : rgba(20, 184, 166, 0.15);  --pastel-teal-txt   : #2dd4bf;
+
+  --rb-shadow-xs : 0 1px 3px rgba(0, 0, 0, 0.30);
+  --rb-shadow-sm : 0 2px 8px rgba(0, 0, 0, 0.35);
+  --rb-shadow-md : 0 4px 16px rgba(0, 0, 0, 0.40);
+  --rb-shadow-lg : 0 10px 30px rgba(0, 0, 0, 0.45);
+  --rb-shadow-xl : 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+/* ────────────────────────────────────────────────────────────
+   §1 — GLOBAL RESET & BASE
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active,
+html.rizuki-reborn-active body {
+  font-family        : 'Poppins', system-ui, -apple-system, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Body background — light by default, dark via token */
+html.rizuki-reborn-active body,
+html.rizuki-reborn-active body.rb-light-body {
+  background-color: var(--rb-bg) !important;
+  color           : var(--rb-text) !important;
+}
+html.rizuki-reborn-active body.rb-dark-body,
+html.dark.rizuki-reborn-active body,
+html[data-theme="dark"].rizuki-reborn-active body {
+  background-color: var(--rb-bg) !important;
+  color           : var(--rb-text) !important;
+}
+
+/* Wrapper & content area */
+html.rizuki-reborn-active .wrapper,
+html.rizuki-reborn-active .content-wrapper,
+html.rizuki-reborn-active .right-side {
+  background-color: var(--rb-bg) !important;
+  color           : var(--rb-text) !important;
+}
+
+/* Typography */
+html.rizuki-reborn-active h1,
+html.rizuki-reborn-active h2,
+html.rizuki-reborn-active h3,
+html.rizuki-reborn-active h4,
+html.rizuki-reborn-active h5,
+html.rizuki-reborn-active h6 { color: var(--rb-text) !important; }
+
+html.rizuki-reborn-active p,
+html.rizuki-reborn-active td,
+html.rizuki-reborn-active th,
+html.rizuki-reborn-active li,
+html.rizuki-reborn-active label,
+html.rizuki-reborn-active small,
+html.rizuki-reborn-active span:not(.rb-brand-text):not(.rb-brand-lms)
+                           :not(.rb-profile-name):not(.rb-profile-role)
+                           :not(.rb-strength-label) {
+  color: var(--rb-text) !important;
+}
+
+html.rizuki-reborn-active a { color: var(--rb-primary) !important; }
+html.rizuki-reborn-active a:hover { color: var(--rb-primary-hover) !important; }
+
+/* HR */
+html.rizuki-reborn-active hr { border-color: var(--rb-border) !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar               { width: 6px; height: 6px; }
+::-webkit-scrollbar-track         { background: transparent; }
+::-webkit-scrollbar-thumb         { background: var(--rb-border); border-radius: var(--rb-r-full); }
+::-webkit-scrollbar-thumb:hover   { background: var(--rb-text-muted); }
+
+/* ────────────────────────────────────────────────────────────
+   §2 — HEADER
+──────────────────────────────────────────────────────────── */
+.rb-header {
+  position     : fixed !important;
+  inset        : 0 0 auto 0;
+  height       : var(--rb-header-h) !important;
+  background   : var(--rb-header-bg) !important;
+  border-bottom: 1px solid var(--rb-header-border) !important;
+  box-shadow   : var(--rb-header-shadow) !important;
+  z-index      : 1050 !important;
+  padding      : 0 !important;
+  margin       : 0 !important;
+  transition   : background var(--rb-dur), border-color var(--rb-dur) !important;
+}
+/* Kill AdminLTE's own header positioning */
+html.rizuki-reborn-active .main-header { margin-left: 0 !important; left: 0 !important; }
+
+.rb-header-inner {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  height         : 100%;
+  padding        : 0 20px;
+  gap            : 12px;
+}
+
+.rb-header-left  { display: flex; align-items: center; gap: 12px; }
+.rb-header-right { display: flex; align-items: center; gap: 6px; }
+
+/* Brand */
+.rb-brand {
+  display        : flex;
+  align-items    : center;
+  gap            : 10px;
+  text-decoration: none !important;
+}
+.rb-brand-circle {
+  width          : 34px; height: 34px;
+  background     : linear-gradient(135deg, #3b82f6, #0ea5e9);
+  border-radius  : var(--rb-r-sm);
+  display        : flex; align-items: center; justify-content: center;
+  color          : #fff !important;
+  font-weight    : 800; font-size: 16px;
+  flex-shrink    : 0;
+}
+.rb-brand-text {
+  font-size      : 17px; font-weight: 800;
+  color          : var(--rb-primary) !important;
+  letter-spacing : -0.3px; line-height: 1;
+  text-decoration: none !important;
+}
+.rb-brand-lms {
+  color      : var(--rb-text) !important;
+  font-weight: 700;
+}
+
+/* Hamburger / icon button */
+.rb-icon-btn {
+  display        : flex !important; align-items: center; justify-content: center;
+  width          : 38px; height: 38px;
+  background     : transparent !important;
+  border         : none !important; border-radius: var(--rb-r-sm);
+  color          : var(--rb-text-muted) !important;
+  cursor         : pointer;
+  transition     : color var(--rb-dur), background var(--rb-dur);
+}
+.rb-icon-btn:hover {
+  color      : var(--rb-primary) !important;
+  background : var(--rb-primary-light) !important;
+}
+
+/* Profile trigger */
+.rb-profile-wrap { position: relative; }
+.rb-profile-btn {
+  display       : flex !important; align-items: center; gap: 8px;
+  background    : transparent !important; border: none !important;
+  padding       : 6px 10px;
+  border-radius : var(--rb-r-md);
+  cursor        : pointer;
+  transition    : background var(--rb-dur);
+}
+.rb-profile-btn:hover { background: var(--rb-primary-light) !important; }
+
+.rb-avatar {
+  width        : 36px; height: 36px;
+  border-radius: 50%;
+  object-fit   : cover;
+  border       : 2px solid var(--rb-border);
+  flex-shrink  : 0;
+}
+.rb-avatar-fallback {
+  width        : 36px; height: 36px;
+  border-radius: 50%;
+  background   : linear-gradient(135deg, #3b82f6, #0ea5e9);
+  color        : #fff !important;
+  font-weight  : 700; font-size: 14px;
+  display      : flex; align-items: center; justify-content: center;
+  flex-shrink  : 0;
+}
+.rb-profile-info {
+  display       : flex; flex-direction: column; align-items: flex-start;
+  line-height   : 1.3;
+}
+.rb-profile-name {
+  font-size     : 13px; font-weight: 600;
+  color         : var(--rb-text) !important;
+  max-width     : 140px;
+  white-space   : nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rb-profile-role { font-size: 11px; color: var(--rb-text-muted) !important; }
+.rb-chevron      { color: var(--rb-text-muted) !important; display: flex; }
+
+/* Dropdown */
+.rb-dropdown {
+  position      : absolute;
+  top           : calc(100% + 8px);
+  right         : 0;
+  min-width     : 220px;
+  background    : var(--rb-surface);
+  border        : 1px solid var(--rb-border);
+  border-radius : var(--rb-r-lg);
+  box-shadow    : var(--rb-shadow-lg);
+  z-index       : 1100;
+  overflow      : hidden;
+  opacity       : 0;
+  transform     : translateY(-8px) scale(0.97);
+  pointer-events: none;
+  transition    : opacity var(--rb-dur), transform var(--rb-dur),
+                  background var(--rb-dur), border-color var(--rb-dur);
+}
+.rb-dropdown.rb-dropdown-open {
+  opacity       : 1;
+  transform     : translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.rb-drop-item {
+  display        : flex !important; align-items: center; gap: 10px;
+  padding        : 11px 16px;
+  font-size      : 13px; font-weight: 500;
+  color          : var(--rb-text) !important;
+  text-decoration: none !important;
+  background     : transparent !important; border: none !important;
+  width          : 100%; cursor: pointer;
+  transition     : background var(--rb-dur), color var(--rb-dur);
+}
+.rb-drop-item:hover {
+  background: var(--rb-primary-light) !important;
+  color     : var(--rb-primary) !important;
+}
+.rb-drop-item svg   { flex-shrink: 0; color: inherit !important; }
+.rb-drop-divider    { height: 1px; background: var(--rb-border); margin: 4px 0; }
+.rb-drop-danger     { color: #ef4444 !important; }
+.rb-drop-danger:hover {
+  background: rgba(239, 68, 68, 0.10) !important;
+  color     : #ef4444 !important;
+}
+.rb-drop-badge {
+  margin-left  : auto;
+  background   : #ef4444;
+  color        : #fff !important;
+  border-radius: var(--rb-r-full);
+  font-size    : 10px; font-weight: 700;
+  padding      : 1px 6px;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §3 — SIDEBAR
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .main-sidebar,
+.rb-sidebar {
+  position     : fixed !important;
+  top          : var(--rb-header-h) !important;
+  left         : 0 !important;
+  bottom       : 0 !important;
+  width        : var(--rb-sidebar-w) !important;
+  background   : var(--rb-sidebar-bg) !important;
+  border-right : 1px solid var(--rb-sidebar-border) !important;
+  box-shadow   : var(--rb-shadow-sm) !important;
+  overflow-y   : auto !important;
+  overflow-x   : hidden !important;
+  z-index      : 1030 !important;
+  transition   : transform var(--rb-dur) var(--rb-ease),
+                 background var(--rb-dur), border-color var(--rb-dur) !important;
+}
+
+html.rizuki-reborn-active .main-sidebar .sidebar,
+.rb-sidebar .sidebar { color: var(--rb-text) !important; }
+
+/* Collapsed sidebar */
+html.rizuki-reborn-active body.sidebar-collapse .main-sidebar {
+  transform: translateX(calc(-1 * var(--rb-sidebar-w))) !important;
+}
+
+/* Content / footer offset */
+html.rizuki-reborn-active .content-wrapper,
+html.rizuki-reborn-active .main-footer {
+  margin-left     : var(--rb-sidebar-w) !important;
+  padding-top     : var(--rb-header-h) !important;
+  min-height      : calc(100vh - var(--rb-header-h)) !important;
+  background-color: var(--rb-bg) !important;
+  transition      : margin-left var(--rb-dur) var(--rb-ease) !important;
+}
+html.rizuki-reborn-active body.sidebar-collapse .content-wrapper,
+html.rizuki-reborn-active body.sidebar-collapse .main-footer {
+  margin-left: 0 !important;
+}
+
+/* Hide original user-panel (rebuilt in JS) */
+html.rizuki-reborn-active .sidebar .user-panel,
+html.rizuki-reborn-active .sidebar .sidebar-user-panel { display: none !important; }
+
+/* Menu links */
+.rb-menu-link {
+  display        : flex !important; align-items: center !important; gap: 10px !important;
+  border-radius  : var(--rb-r-md) !important;
+  margin         : 3px 10px !important;
+  padding        : 10px 14px !important;
+  color          : var(--rb-text-muted) !important;
+  font-weight    : 500 !important; font-size: 13.5px !important;
+  text-decoration: none !important;
+  transition     : all var(--rb-dur) var(--rb-ease) !important;
+  border         : none !important;
+  background     : transparent !important;
+}
+.rb-menu-link:hover,
+html.rizuki-reborn-active .sidebar-menu > li:hover    > .rb-menu-link,
+html.rizuki-reborn-active .sidebar-menu > li.active   > .rb-menu-link {
+  background-color: var(--rb-primary-light) !important;
+  color           : var(--rb-primary) !important;
+}
+.rb-menu-icon {
+  display   : inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: inherit !important;
+}
+.rb-menu-label {
+  padding       : 14px 18px 6px !important;
+  font-size     : 10px !important; font-weight: 700 !important;
+  text-transform: uppercase !important; letter-spacing: 1px !important;
+  color         : var(--rb-text-faint) !important;
+  background    : transparent !important;
+}
+
+/* Pull-right badge inside sidebar */
+html.rizuki-reborn-active .sidebar-menu li > a > .pull-right-container {
+  position : absolute !important;
+  right    : 20px !important; top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* Sub-menus (treeview) */
+html.rizuki-reborn-active .sidebar-menu .treeview-menu {
+  background  : transparent !important;
+  padding-left: 12px !important;
+}
+html.rizuki-reborn-active .sidebar-menu .treeview-menu > li > a {
+  font-size: 12.5px !important;
+  padding  : 7px 14px 7px 30px !important;
+  color    : var(--rb-text-muted) !important;
+}
+html.rizuki-reborn-active .sidebar-menu .treeview-menu > li.active > a,
+html.rizuki-reborn-active .sidebar-menu .treeview-menu > li > a:hover {
+  color        : var(--rb-primary) !important;
+  background   : var(--rb-primary-light) !important;
+  border-radius: var(--rb-r-md) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §4 — FOOTER
+──────────────────────────────────────────────────────────── */
+.rb-footer {
+  background : var(--rb-surface) !important;
+  border-top : 1px solid var(--rb-border) !important;
+  padding    : 14px 24px !important;
+  font-size  : 12px !important;
+  color      : var(--rb-text-muted) !important;
+  transition : background var(--rb-dur), border-color var(--rb-dur) !important;
+}
+.rb-footer-inner {
+  display        : flex;
+  justify-content: space-between; align-items: center; flex-wrap: wrap;
+  gap            : 8px;
+}
+.rb-footer-inner a { color: var(--rb-primary) !important; text-decoration: none; }
+.rb-footer-inner a:hover { text-decoration: underline; }
+.rb-footer-right { color: var(--rb-text-faint) !important; }
+
+/* ────────────────────────────────────────────────────────────
+   §5 — CONTENT HEADER & BREADCRUMBS
+──────────────────────────────────────────────────────────── */
+.rb-content-header {
+  padding   : 20px 24px 16px !important;
+  background: transparent !important;
+}
+.rb-page-title {
+  font-size  : 22px !important; font-weight: 700 !important;
+  color      : var(--rb-text) !important;
+  margin     : 0 0 8px !important; line-height: 1.3 !important;
+}
+.rb-page-title small {
+  font-size  : 14px !important; font-weight: 400 !important;
+  color      : var(--rb-text-muted) !important; margin-left: 8px !important;
+}
+
+.rb-breadcrumb {
+  display   : flex !important; align-items: center !important;
+  flex-wrap : wrap !important; gap: 2px !important;
+  padding   : 0 !important; margin: 0 !important;
+  background: transparent !important;
+  border    : none !important;
+  list-style: none !important; font-size: 12.5px !important;
+}
+/* Kill Bootstrap default separator */
+.rb-breadcrumb > li + li::before { content: none !important; display: none !important; }
+
+.rb-crumb-item {
+  display    : flex; align-items: center;
+  color      : var(--rb-text-muted) !important; gap: 4px;
+}
+.rb-crumb-item a { color: var(--rb-primary) !important; text-decoration: none; }
+.rb-crumb-item a:hover { text-decoration: underline; }
+.rb-crumb-item.rb-crumb-active { color: var(--rb-text) !important; font-weight: 600; }
+.rb-crumb-sep { color: var(--rb-text-faint) !important; display: flex; align-items: center; }
+
+/* ────────────────────────────────────────────────────────────
+   §6 — BOX CONTAINERS (AdminLTE .box)
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .box,
+.rb-box {
+  background   : var(--rb-surface) !important;
+  border       : 1px solid var(--rb-border) !important;
+  border-top   : 1px solid var(--rb-border) !important; /* override AdminLTE colored border-top */
+  border-radius: var(--rb-r-lg) !important;
+  box-shadow   : var(--rb-shadow-sm) !important;
+  margin-bottom: 20px !important;
+  transition   : background var(--rb-dur), border-color var(--rb-dur) !important;
+}
+/* Kill colored box variants */
+html.rizuki-reborn-active .box.box-primary,
+html.rizuki-reborn-active .box.box-success,
+html.rizuki-reborn-active .box.box-info,
+html.rizuki-reborn-active .box.box-warning,
+html.rizuki-reborn-active .box.box-danger {
+  border-top-color: var(--rb-border) !important;
+}
+
+html.rizuki-reborn-active .box-header,
+.rb-box-header {
+  background   : transparent !important;
+  color        : var(--rb-text) !important;
+  border-bottom: 1px solid var(--rb-border) !important;
+  padding      : 14px 20px !important;
+}
+html.rizuki-reborn-active .box-body,
+.rb-box-body {
+  background: transparent !important;
+  color     : var(--rb-text) !important;
+  padding   : 18px 20px !important;
+}
+html.rizuki-reborn-active .box-footer,
+.rb-box-footer {
+  background   : var(--rb-surface-2) !important;
+  border-top   : 1px solid var(--rb-border) !important;
+  color        : var(--rb-text-muted) !important;
+  padding      : 12px 20px !important;
+  border-radius: 0 0 var(--rb-r-lg) var(--rb-r-lg) !important;
+}
+.rb-box-title {
+  font-size  : 15px !important; font-weight: 600 !important;
+  color      : var(--rb-text) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §7 — DASHBOARD CARDS (Pastel small-box)
+──────────────────────────────────────────────────────────── */
+.reborn-pastel-card {
+  border       : 1px solid var(--rb-border) !important;
+  border-radius: var(--rb-r-xl) !important;
+  box-shadow   : var(--rb-shadow-sm) !important;
+  overflow     : hidden !important;
+  transition   : transform 0.3s var(--rb-ease), box-shadow 0.3s var(--rb-ease) !important;
+}
+.reborn-pastel-card:hover {
+  transform : translateY(-3px) !important;
+  box-shadow: var(--rb-shadow-md) !important;
+}
+
+.reborn-pastel-blue   { background-color: var(--pastel-blue-bg)   !important; }
+.reborn-pastel-green  { background-color: var(--pastel-green-bg)  !important; }
+.reborn-pastel-orange { background-color: var(--pastel-orange-bg) !important; }
+.reborn-pastel-teal   { background-color: var(--pastel-teal-bg)   !important; }
+
+.reborn-pastel-blue   .inner h3,
+.reborn-pastel-blue   .inner p { color: var(--pastel-blue-txt)   !important; }
+.reborn-pastel-green  .inner h3,
+.reborn-pastel-green  .inner p { color: var(--pastel-green-txt)  !important; }
+.reborn-pastel-orange .inner h3,
+.reborn-pastel-orange .inner p { color: var(--pastel-orange-txt) !important; }
+.reborn-pastel-teal   .inner h3,
+.reborn-pastel-teal   .inner p { color: var(--pastel-teal-txt)   !important; }
+
+/* ────────────────────────────────────────────────────────────
+   §8 — TABLES
+──────────────────────────────────────────────────────────── */
+.rb-table-wrap { overflow-x: auto; border-radius: var(--rb-r-md); }
+
+html.rizuki-reborn-active table.table,
+.rb-table {
+  background     : transparent !important;
+  color          : var(--rb-text) !important;
+  width          : 100%;
+  border-collapse: separate;
+  border-spacing : 0;
+}
+html.rizuki-reborn-active table.table th,
+html.rizuki-reborn-active table.table td,
+.rb-table th, .rb-table td {
+  background    : var(--rb-surface) !important;
+  color         : var(--rb-text) !important;
+  border-color  : var(--rb-border) !important;
+  padding       : 12px 16px !important;
+  vertical-align: middle !important;
+  font-size     : 13.5px !important;
+}
+html.rizuki-reborn-active table.table th,
+.rb-table th {
+  background    : var(--rb-surface-2) !important;
+  font-weight   : 600 !important;
+  text-transform: uppercase !important;
+  font-size     : 11px !important;
+  letter-spacing: 0.6px !important;
+  color         : var(--rb-text-muted) !important;
+}
+html.rizuki-reborn-active table.table-striped > tbody > tr:nth-of-type(odd) td {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+html[data-theme="dark"] table.table-striped > tbody > tr:nth-of-type(odd) td {
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+html.rizuki-reborn-active table.table-hover > tbody > tr:hover td {
+  background: var(--rb-primary-light) !important;
+  cursor    : pointer;
+}
+html.rizuki-reborn-active .table-responsive { background: transparent !important; border: none !important; }
+html.rizuki-reborn-active .table-bordered,
+html.rizuki-reborn-active table.table-bordered td,
+html.rizuki-reborn-active table.table-bordered th {
+  border-color: var(--rb-border) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §9 — FORMS
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .form-control,
+.rb-form-control {
+  background   : var(--rb-bg) !important;
+  border       : 1px solid var(--rb-border) !important;
+  color        : var(--rb-text) !important;
+  border-radius: var(--rb-r-md) !important;
+  padding      : 10px 14px !important;
+  height       : auto !important;
+  font-size    : 14px !important;
+  font-family  : 'Poppins', sans-serif !important;
+  box-shadow   : none !important;
+  transition   : border-color var(--rb-dur), box-shadow var(--rb-dur) !important;
+}
+html.rizuki-reborn-active .form-control:focus,
+.rb-form-control:focus {
+  border-color: var(--rb-primary) !important;
+  box-shadow  : 0 0 0 3px var(--rb-primary-glow) !important;
+  outline     : none !important;
+  background  : var(--rb-surface) !important;
+}
+html.rizuki-reborn-active .form-control::placeholder,
+.rb-form-control::placeholder { color: var(--rb-text-faint) !important; }
+
+.rb-form-group  { margin-bottom: 16px !important; }
+.rb-input-group { border-radius: var(--rb-r-md) !important; }
+
+html.rizuki-reborn-active .input-group-addon {
+  background  : var(--rb-surface-2) !important;
+  border-color: var(--rb-border) !important;
+  color       : var(--rb-text-muted) !important;
+}
+html.rizuki-reborn-active select.form-control option {
+  background: var(--rb-surface) !important;
+  color     : var(--rb-text) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §10 — MODALS
+──────────────────────────────────────────────────────────── */
+.rb-modal {
+  border-radius: var(--rb-r-xl) !important;
+  border       : 1px solid var(--rb-border) !important;
+  overflow     : hidden !important;
+  box-shadow   : var(--rb-shadow-xl) !important;
+  background   : var(--rb-surface) !important;
+}
+.rb-modal-header {
+  background   : var(--rb-primary) !important;
+  border-bottom: none !important;
+  padding      : 16px 20px !important;
+}
+.rb-modal-title {
+  font-weight: 700 !important; font-size: 16px !important;
+  color      : #fff !important;
+}
+.rb-modal-close {
+  color      : rgba(255, 255, 255, 0.8) !important;
+  text-shadow: none !important;
+  opacity    : 1 !important;
+  font-size  : 20px !important;
+}
+.rb-modal-close:hover { color: #fff !important; }
+.rb-modal-body {
+  background: var(--rb-surface) !important;
+  color     : var(--rb-text) !important;
+  padding   : 20px !important;
+}
+.rb-modal-footer {
+  background : var(--rb-surface-2) !important;
+  border-top : 1px solid var(--rb-border) !important;
+  padding    : 12px 20px !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §11 — LOGIN PAGES (login, /new)
+──────────────────────────────────────────────────────────── */
+#rb-login-wrapper {
+  position   : fixed;
+  inset      : 0;
+  z-index    : 99999;
+  font-family: 'Poppins', sans-serif;
+}
+
+.rb-login-bg {
+  min-height  : 100vh;
+  display     : flex; align-items: center; justify-content: center;
+  padding     : 24px;
+  background  : linear-gradient(135deg, #0f2447 0%, #0f172a 50%, #0a1628 100%);
+  position    : relative; overflow: hidden;
+}
+
+/* Animated background blobs */
+.rb-blobs { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.rb-blob  {
+  position : absolute; border-radius: 50%;
+  filter   : blur(80px); opacity: 0.22;
+  animation: rb-float 9s ease-in-out infinite;
+}
+.rb-blob-1 { width: 400px; height: 400px; background: #3b82f6; top: -100px; left: -100px; animation-delay: 0s; }
+.rb-blob-2 { width: 300px; height: 300px; background: #0ea5e9; bottom: -80px; right: -80px; animation-delay: -4s; }
+.rb-blob-3 { width: 250px; height: 250px; background: #06b6d4; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -8s; }
+
+@keyframes rb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(20px, -20px) scale(1.05); }
+  66%       { transform: translate(-15px, 15px) scale(0.95); }
+}
+
+/* Glassmorphism card */
+.rb-login-card {
+  position              : relative; z-index: 1;
+  background            : rgba(255, 255, 255, 0.05);
+  backdrop-filter       : blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border                : 1px solid rgba(255, 255, 255, 0.12);
+  border-radius         : var(--rb-r-xl);
+  padding               : 36px 40px;
+  width                 : 100%; max-width: 460px;
+  box-shadow            : 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+.rb-login-brand {
+  display      : flex; align-items: center; gap: 14px;
+  margin-bottom: 26px;
+}
+.rb-login-logo-circle {
+  width        : 52px; height: 52px;
+  background   : linear-gradient(135deg, #3b82f6, #0ea5e9);
+  border-radius: var(--rb-r-md);
+  display      : flex; align-items: center; justify-content: center;
+  font-size    : 24px; font-weight: 800; color: #fff;
+  flex-shrink  : 0;
+  box-shadow   : 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+.rb-login-title { font-size: 20px; font-weight: 800; color: #fff !important; margin: 0; line-height: 1.2; }
+.rb-login-sub   { font-size: 12px; color: rgba(255, 255, 255, 0.5) !important; margin: 4px 0 0; line-height: 1.4; }
+
+/* Auto-login banner */
+.rb-autologin-banner {
+  display      : flex; align-items: center; justify-content: space-between;
+  flex-wrap    : wrap; gap: 8px;
+  padding      : 10px 14px;
+  background   : rgba(59, 130, 246, 0.15);
+  border       : 1px solid rgba(96, 165, 250, 0.3);
+  border-radius: var(--rb-r-md);
+  margin-bottom: 18px; font-size: 12.5px; color: #93c5fd !important;
+}
+.rb-autologin-actions { display: flex; gap: 6px; }
+.rb-al-btn {
+  padding      : 4px 10px; border-radius: var(--rb-r-sm);
+  border       : 1px solid transparent;
+  font-size    : 12px; font-weight: 600; cursor: pointer;
+}
+.rb-al-use        { background: #3b82f6; color: #fff !important; }
+.rb-al-use:hover  { background: #2563eb; }
+.rb-al-clear      { background: transparent; color: #94a3b8 !important; border-color: rgba(148, 163, 184, 0.3); }
+.rb-al-clear:hover { background: rgba(239, 68, 68, 0.15); color: #f87171 !important; }
+
+/* Form elements (login context — dark glass bg) */
+.rb-form  { display: flex; flex-direction: column; gap: 16px; }
+.rb-field { display: flex; flex-direction: column; gap: 6px; }
+.rb-label {
+  font-size  : 12.5px; font-weight: 600;
+  color      : rgba(255, 255, 255, 0.7) !important;
+  letter-spacing: 0.3px;
+}
+.rb-input-wrap         { position: relative; }
+.rb-input-has-icon .rb-input { padding-right: 42px; }
+
+.rb-input {
+  width        : 100%; padding: 12px 14px;
+  background   : rgba(255, 255, 255, 0.07);
+  border       : 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--rb-r-md);
+  color        : #fff !important;
+  font-size    : 14px; font-family: 'Poppins', sans-serif;
+  outline      : none; box-sizing: border-box;
+  transition   : border-color var(--rb-dur), box-shadow var(--rb-dur), background var(--rb-dur);
+}
+.rb-input:focus {
+  border-color: #60a5fa;
+  background  : rgba(255, 255, 255, 0.10);
+  box-shadow  : 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+.rb-input::placeholder { color: rgba(255, 255, 255, 0.3) !important; }
+
+.rb-eye-btn {
+  position  : absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: transparent; border: none;
+  color     : rgba(255, 255, 255, 0.4) !important;
+  cursor    : pointer; display: flex; align-items: center; padding: 0;
+  transition: color var(--rb-dur);
+}
+.rb-eye-btn:hover { color: rgba(255, 255, 255, 0.8) !important; }
+
+.rb-form-row {
+  display    : flex; align-items: center;
+  justify-content: space-between; gap: 8px;
+}
+.rb-check-label {
+  display  : flex; align-items: center; gap: 7px;
+  font-size: 12.5px; color: rgba(255, 255, 255, 0.6) !important; cursor: pointer;
+}
+.rb-check  { accent-color: #3b82f6; width: 14px; height: 14px; }
+.rb-forgot { font-size: 12.5px; color: #60a5fa !important; text-decoration: none; font-weight: 500; }
+.rb-forgot:hover { color: #93c5fd !important; text-decoration: underline; }
+
+/* Submit button */
+.rb-btn-submit {
+  width        : 100%; padding: 13px;
+  background   : linear-gradient(135deg, #3b82f6, #0ea5e9);
+  border       : none; border-radius: var(--rb-r-md);
+  color        : #fff !important; font-size: 14px; font-weight: 700;
+  font-family  : 'Poppins', sans-serif; cursor: pointer;
+  box-shadow   : 0 8px 20px rgba(59, 130, 246, 0.35);
+  transition   : all 0.3s var(--rb-ease);
+  display      : flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top   : 4px;
+}
+.rb-btn-submit:hover:not(:disabled) {
+  transform : translateY(-2px);
+  box-shadow: 0 12px 28px rgba(59, 130, 246, 0.45);
+}
+.rb-btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+/* Spinner */
+.rb-spinner {
+  width           : 16px; height: 16px;
+  border          : 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation       : rb-spin 0.6s linear infinite;
+}
+@keyframes rb-spin { to { transform: rotate(360deg); } }
+
+/* Back link */
+.rb-btn-back {
+  display      : block; text-align: center; padding: 10px;
+  color        : rgba(255, 255, 255, 0.5) !important; text-decoration: none;
+  font-size    : 13px; border-radius: var(--rb-r-md);
+  transition   : color var(--rb-dur), background var(--rb-dur);
+}
+.rb-btn-back:hover {
+  color      : rgba(255, 255, 255, 0.85) !important;
+  background : rgba(255, 255, 255, 0.05);
+}
+
+/* ── Captcha ─────────── */
+.rb-captcha-wrap {
+  display      : flex; align-items: center; gap: 10px;
+  padding      : 10px 12px;
+  background   : rgba(0, 0, 0, 0.25);
+  border       : 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--rb-r-md);
+}
+.rb-captcha-img {
+  border-radius: 6px;
+  height       : 46px; width: auto; max-width: 160px;
+  object-fit   : contain;
+  background   : rgba(255, 255, 255, 0.9);
+  padding      : 2px 6px;
+}
+.rb-captcha-refresh {
+  background   : rgba(59, 130, 246, 0.2);
+  border       : 1px solid rgba(96, 165, 250, 0.3);
+  color        : #60a5fa !important;
+  border-radius: var(--rb-r-sm);
+  width        : 34px; height: 34px;
+  display      : flex; align-items: center; justify-content: center;
+  cursor       : pointer; flex-shrink: 0;
+  transition   : all var(--rb-dur);
+}
+.rb-captcha-refresh:hover { background: rgba(59, 130, 246, 0.35); transform: rotate(90deg); }
+
+/* Canvas captcha */
+#rb-canvas-wrap          { line-height: 0; cursor: pointer; }
+#rb-canvas-wrap canvas   { border-radius: 6px; display: block; max-width: 160px; }
+#rb-canvas-wrap:hover    { opacity: 0.85; }
+
+/* ── Password strength ── */
+.rb-strength-wrap  { display: flex; align-items: center; gap: 10px; margin-top: -4px; }
+.rb-strength-track {
+  flex         : 1; height: 4px;
+  background   : rgba(255, 255, 255, 0.1);
+  border-radius: var(--rb-r-full); overflow: hidden;
+}
+.rb-strength-bar   {
+  height       : 4px; border-radius: var(--rb-r-full);
+  background   : transparent; width: 0;
+  transition   : width 0.3s var(--rb-ease), background 0.3s;
+}
+.rb-strength-label { font-size: 11px; font-weight: 600; transition: color 0.3s; min-width: 60px; }
+
+/* ── Forgot / Reset breadcrumb ── */
+.rb-reset-breadcrumb {
+  display      : flex; align-items: center; gap: 6px;
+  margin-bottom: 20px; font-size: 12px;
+}
+.rb-reset-bc-link {
+  color      : rgba(255, 255, 255, 0.45) !important; text-decoration: none;
+  display    : flex; align-items: center; gap: 4px;
+  transition : color var(--rb-dur);
+}
+.rb-reset-bc-link:hover { color: rgba(255, 255, 255, 0.75) !important; }
+.rb-reset-bc-sep        { color: rgba(255, 255, 255, 0.2) !important; display: flex; align-items: center; }
+.rb-reset-bc-current    { color: #60a5fa !important; font-weight: 500; }
+
+/* Footer text on login pages */
+.rb-login-footer-text {
+  text-align : center; font-size: 11.5px;
+  color      : rgba(255, 255, 255, 0.3) !important;
+  margin-top : 20px; margin-bottom: 0;
+}
+.rb-login-footer-text a        { color: rgba(255, 255, 255, 0.55) !important; text-decoration: none; }
+.rb-login-footer-text a:hover  { color: #fff !important; }
+
+/* ────────────────────────────────────────────────────────────
+   §12 — INBOX (Pesan Masuk)
+──────────────────────────────────────────────────────────── */
+.rb-inbox-wrap        { padding: 0 24px 24px; max-width: 900px; }
+.rb-inbox-header {
+  display      : flex; align-items: center; justify-content: space-between;
+  flex-wrap    : wrap; gap: 16px;
+  padding      : 0 0 20px;
+  border-bottom: 1px solid var(--rb-border);
+  margin-bottom: 16px;
+}
+.rb-inbox-header-left { display: flex; align-items: center; gap: 14px; }
+.rb-inbox-icon {
+  width        : 46px; height: 46px;
+  background   : var(--rb-primary-light);
+  border-radius: var(--rb-r-lg);
+  display      : flex; align-items: center; justify-content: center;
+  color        : var(--rb-primary) !important; flex-shrink: 0;
+}
+.rb-inbox-title         { font-size: 20px !important; font-weight: 700 !important; color: var(--rb-text) !important; margin: 0 !important; }
+.rb-inbox-subtitle      { font-size: 13px !important; color: var(--rb-text-muted) !important; margin: 2px 0 0 !important; }
+.rb-inbox-unread-count  { color: var(--rb-primary) !important; font-weight: 600; }
+.rb-inbox-search-wrap   { flex-shrink: 0; }
+.rb-inbox-search {
+  padding      : 9px 14px;
+  background   : var(--rb-bg);
+  border       : 1px solid var(--rb-border);
+  border-radius: var(--rb-r-full);
+  color        : var(--rb-text) !important;
+  font-size    : 13px; font-family: 'Poppins', sans-serif;
+  outline      : none; width: 220px;
+  transition   : border-color var(--rb-dur), box-shadow var(--rb-dur);
+}
+.rb-inbox-search:focus {
+  border-color: var(--rb-primary);
+  box-shadow  : 0 0 0 3px var(--rb-primary-glow);
+}
+.rb-inbox-search::placeholder { color: var(--rb-text-faint) !important; }
+
+.rb-inbox-list {
+  display      : flex; flex-direction: column;
+  background   : var(--rb-surface);
+  border       : 1px solid var(--rb-border);
+  border-radius: var(--rb-r-lg);
+  overflow     : hidden;
+  box-shadow   : var(--rb-shadow-sm);
+}
+.rb-inbox-item {
+  display        : flex !important; align-items: center; gap: 14px;
+  padding        : 14px 18px !important;
+  text-decoration: none !important;
+  border-bottom  : 1px solid var(--rb-border);
+  transition     : background var(--rb-dur);
+  position       : relative;
+  color          : var(--rb-text) !important;
+}
+.rb-inbox-item:last-child { border-bottom: none; }
+.rb-inbox-item:hover      { background: var(--rb-primary-light) !important; }
+.rb-inbox-unread          { background: rgba(59, 130, 246, 0.04) !important; }
+
+.rb-inbox-avatar {
+  width        : 42px; height: 42px; border-radius: 50%;
+  background   : linear-gradient(135deg, #3b82f6, #0ea5e9);
+  color        : #fff !important; font-size: 16px; font-weight: 700;
+  display      : flex; align-items: center; justify-content: center;
+  flex-shrink  : 0;
+}
+.rb-inbox-content  { flex: 1; min-width: 0; }
+.rb-inbox-row-top  { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+.rb-inbox-sender   { font-weight: 600; font-size: 13.5px; color: var(--rb-text) !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rb-inbox-unread .rb-inbox-sender { font-weight: 700; color: var(--rb-primary) !important; }
+.rb-inbox-date     { font-size: 11.5px; color: var(--rb-text-faint) !important; white-space: nowrap; flex-shrink: 0; }
+.rb-inbox-subject  { font-size: 13px; color: var(--rb-text-muted) !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rb-inbox-dot      { width: 8px; height: 8px; background: var(--rb-primary); border-radius: 50%; flex-shrink: 0; }
+
+.rb-inbox-empty      { padding: 60px 24px; text-align: center; }
+.rb-inbox-empty-icon {
+  width        : 56px; height: 56px;
+  background   : var(--rb-surface-2);
+  border-radius: var(--rb-r-lg);
+  display      : flex; align-items: center; justify-content: center;
+  margin       : 0 auto 16px;
+  color        : var(--rb-text-faint) !important;
+}
+.rb-inbox-empty-text { color: var(--rb-text-muted) !important; font-size: 14px; margin: 0 !important; }
+
+/* ────────────────────────────────────────────────────────────
+   §13 — KELAS / PERTEMUAN / FORUM / TUGAS
+──────────────────────────────────────────────────────────── */
+/* File download links */
+.rb-file-link {
+  display        : inline-flex; align-items: center; gap: 6px;
+  padding        : 6px 12px;
+  border-radius  : var(--rb-r-md);
+  background     : var(--rb-primary-light);
+  color          : var(--rb-primary) !important;
+  font-weight    : 500; font-size: 13px;
+  text-decoration: none !important;
+  transition     : background var(--rb-dur);
+}
+.rb-file-link:hover { background: rgba(59, 130, 246, 0.2) !important; }
+
+/* Nav tabs */
+html.rizuki-reborn-active .nav-tabs {
+  border-bottom: 2px solid var(--rb-border) !important;
+  margin-bottom: 0 !important;
+}
+html.rizuki-reborn-active .nav-tabs > li > a {
+  border-radius: var(--rb-r-md) var(--rb-r-md) 0 0 !important;
+  border       : 1px solid transparent !important;
+  color        : var(--rb-text-muted) !important;
+  font-weight  : 500 !important; font-size: 13px !important;
+  padding      : 10px 16px !important;
+  background   : transparent !important;
+  transition   : color var(--rb-dur), background var(--rb-dur) !important;
+}
+html.rizuki-reborn-active .nav-tabs > li.active > a,
+html.rizuki-reborn-active .nav-tabs > li.active > a:focus,
+html.rizuki-reborn-active .nav-tabs > li.active > a:hover {
+  background  : var(--rb-surface) !important;
+  border-color: var(--rb-border) var(--rb-border) var(--rb-surface) !important;
+  color       : var(--rb-primary) !important;
+  font-weight : 600 !important;
+}
+html.rizuki-reborn-active .nav-tabs > li > a:hover {
+  background: var(--rb-primary-light) !important;
+  color     : var(--rb-primary) !important;
+}
+html.rizuki-reborn-active .tab-content {
+  background   : var(--rb-surface) !important;
+  border       : 1px solid var(--rb-border) !important;
+  border-top   : none !important;
+  border-radius: 0 0 var(--rb-r-md) var(--rb-r-md) !important;
+  padding      : 16px !important;
+}
+
+/* Forum direct-chat */
+html.rizuki-reborn-active .direct-chat-msg,
+html.rizuki-reborn-active .post-user-block { margin-bottom: 16px !important; }
+
+html.rizuki-reborn-active .direct-chat-text {
+  background   : var(--rb-surface) !important;
+  border       : 1px solid var(--rb-border) !important;
+  border-radius: var(--rb-r-md) !important;
+  color        : var(--rb-text) !important;
+  padding      : 10px 14px !important;
+}
+
+/* Material list items */
+html.rizuki-reborn-active .list-group-item {
+  background   : var(--rb-surface) !important;
+  border-color : var(--rb-border) !important;
+  color        : var(--rb-text) !important;
+  padding      : 12px 16px !important;
+}
+html.rizuki-reborn-active .list-group-item:hover {
+  background: var(--rb-surface-2) !important;
+}
+
+/* Upload zones */
+html.rizuki-reborn-active .dropzone {
+  background   : var(--rb-surface) !important;
+  border       : 2px dashed var(--rb-border) !important;
+  border-radius: var(--rb-r-lg) !important;
+  color        : var(--rb-text-muted) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §14 — PROFILE HERO (NEW in v5.0)
+──────────────────────────────────────────────────────────── */
+.rb-profile-hero {
+  margin-bottom: 24px;
+}
+.rb-profile-hero-inner {
+  display      : flex; align-items: center; gap: 20px;
+  background   : var(--rb-surface);
+  border       : 1px solid var(--rb-border);
+  border-radius: var(--rb-r-xl);
+  padding      : 24px 28px;
+  box-shadow   : var(--rb-shadow-sm);
+  flex-wrap    : wrap;
+}
+.rb-profile-hero-avatar {
+  flex-shrink  : 0;
+}
+.rb-ph-img {
+  width        : 72px; height: 72px;
+  border-radius: 50%;
+  object-fit   : cover;
+  border       : 3px solid var(--rb-primary-light);
+  box-shadow   : 0 0 0 3px var(--rb-primary-glow);
+}
+.rb-ph-initials {
+  width        : 72px; height: 72px;
+  border-radius: 50%;
+  background   : linear-gradient(135deg, #3b82f6, #0ea5e9);
+  color        : #fff !important;
+  font-size    : 24px; font-weight: 800;
+  display      : flex; align-items: center; justify-content: center;
+  box-shadow   : 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+.rb-profile-hero-info {
+  flex: 1; min-width: 0;
+}
+.rb-ph-name {
+  font-size    : 20px !important; font-weight: 700 !important;
+  color        : var(--rb-text) !important;
+  margin       : 0 0 4px !important;
+  white-space  : nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rb-ph-role {
+  font-size    : 13px !important;
+  color        : var(--rb-text-muted) !important;
+  margin       : 0 0 10px !important;
+}
+.rb-ph-badge {
+  display      : inline-flex; align-items: center; gap: 5px;
+  padding      : 4px 10px;
+  background   : rgba(34, 197, 94, 0.12);
+  border       : 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: var(--rb-r-full);
+  font-size    : 11.5px; font-weight: 600;
+  color        : #15803d !important;
+}
+html[data-theme="dark"] .rb-ph-badge { color: #4ade80 !important; }
+
+.rb-ph-edit-btn {
+  display        : inline-flex; align-items: center; gap: 7px;
+  padding        : 9px 18px;
+  background     : var(--rb-primary-light);
+  border         : 1px solid var(--rb-border);
+  border-radius  : var(--rb-r-md);
+  color          : var(--rb-primary) !important;
+  font-size      : 13px; font-weight: 600;
+  text-decoration: none !important;
+  transition     : background var(--rb-dur), box-shadow var(--rb-dur);
+  flex-shrink    : 0;
+  margin-left    : auto;
+}
+.rb-ph-edit-btn:hover {
+  background : rgba(59, 130, 246, 0.18) !important;
+  box-shadow : var(--rb-shadow-sm);
+  color      : var(--rb-primary) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §15 — BUTTONS
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .btn {
+  border-radius: var(--rb-r-md) !important;
+  font-weight  : 500 !important;
+  font-family  : 'Poppins', sans-serif !important;
+  transition   : all var(--rb-dur) !important;
+}
+html.rizuki-reborn-active .btn-primary {
+  background  : var(--rb-primary) !important;
+  border-color: var(--rb-primary) !important;
+  color       : #fff !important;
+}
+html.rizuki-reborn-active .btn-primary:hover {
+  background  : var(--rb-primary-hover) !important;
+  border-color: var(--rb-primary-hover) !important;
+}
+html.rizuki-reborn-active .btn-default {
+  background  : var(--rb-surface) !important;
+  border-color: var(--rb-border) !important;
+  color       : var(--rb-text) !important;
+}
+html.rizuki-reborn-active .btn-success { border-radius: var(--rb-r-md) !important; }
+html.rizuki-reborn-active .btn-danger  { border-radius: var(--rb-r-md) !important; }
+html.rizuki-reborn-active .btn-warning { border-radius: var(--rb-r-md) !important; }
+
+/* Labels / Badges */
+html.rizuki-reborn-active .label-success { background: #22c55e !important; color: #fff !important; border-radius: 6px !important; }
+html.rizuki-reborn-active .label-danger  { background: #ef4444 !important; color: #fff !important; border-radius: 6px !important; }
+html.rizuki-reborn-active .label-warning { background: #f59e0b !important; color: #fff !important; border-radius: 6px !important; }
+html.rizuki-reborn-active .label-info    { background: #3b82f6 !important; color: #fff !important; border-radius: 6px !important; }
+html.rizuki-reborn-active .label-primary { background: var(--rb-primary) !important; color: #fff !important; border-radius: 6px !important; }
+html.rizuki-reborn-active .label-default { background: var(--rb-border) !important; color: var(--rb-text) !important; border-radius: 6px !important; }
+
+/* ────────────────────────────────────────────────────────────
+   §16 — ALERTS
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .alert {
+  border-radius: var(--rb-r-md) !important;
+  border       : 1px solid var(--rb-border) !important;
+}
+html.rizuki-reborn-active .alert-info    { background: rgba(59, 130, 246, 0.08) !important; border-color: rgba(59, 130, 246, 0.25) !important; color: var(--rb-primary) !important; }
+html.rizuki-reborn-active .alert-success { background: rgba(34, 197, 94, 0.08)  !important; border-color: rgba(34, 197, 94, 0.25)  !important; color: #15803d !important; }
+html.rizuki-reborn-active .alert-warning { background: rgba(245, 158, 11, 0.08) !important; border-color: rgba(245, 158, 11, 0.25) !important; color: #b45309 !important; }
+html.rizuki-reborn-active .alert-danger  { background: rgba(239, 68, 68, 0.08)  !important; border-color: rgba(239, 68, 68, 0.25)  !important; color: #b91c1c !important; }
+
+html[data-theme="dark"].rizuki-reborn-active .alert-success { color: #4ade80 !important; }
+html[data-theme="dark"].rizuki-reborn-active .alert-warning { color: #fbbf24 !important; }
+html[data-theme="dark"].rizuki-reborn-active .alert-danger  { color: #f87171 !important; }
+
+/* ────────────────────────────────────────────────────────────
+   §17 — INFO BOX
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .info-box,
+.rb-info-box {
+  background   : var(--rb-surface) !important;
+  border-radius: var(--rb-r-lg) !important;
+  box-shadow   : var(--rb-shadow-sm) !important;
+  border       : 1px solid var(--rb-border) !important;
+  overflow     : hidden !important;
+}
+html.rizuki-reborn-active .info-box-content { padding: 14px 16px !important; }
+html.rizuki-reborn-active .info-box-number  { color: var(--rb-text) !important; font-weight: 700 !important; }
+html.rizuki-reborn-active .info-box-text    { color: var(--rb-text-muted) !important; }
+
+/* ────────────────────────────────────────────────────────────
+   §18 — PROGRESS BARS (Presensi)
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .progress {
+  background   : var(--rb-border) !important;
+  border-radius: 99px !important;
+  height       : 6px !important;
+  box-shadow   : none !important;
+  overflow     : hidden !important;
+}
+html.rizuki-reborn-active .progress-bar {
+  box-shadow   : none !important;
+  border-radius: 99px !important;
+  transition   : width 0.6s ease !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §19 — WELLS, CALLOUTS & MISC
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .well {
+  background   : var(--rb-surface-2) !important;
+  border-color : var(--rb-border) !important;
+  border-radius: var(--rb-r-md) !important;
+  box-shadow   : none !important;
+}
+html.rizuki-reborn-active .callout {
+  background   : var(--rb-surface) !important;
+  border-color : var(--rb-border) !important;
+  border-radius: var(--rb-r-md) !important;
+}
+html.rizuki-reborn-active .panel {
+  background   : var(--rb-surface) !important;
+  border-color : var(--rb-border) !important;
+  border-radius: var(--rb-r-lg) !important;
+  box-shadow   : var(--rb-shadow-sm) !important;
+}
+html.rizuki-reborn-active .panel-heading {
+  background   : var(--rb-surface-2) !important;
+  border-color : var(--rb-border) !important;
+  color        : var(--rb-text) !important;
+}
+html.rizuki-reborn-active .panel-body {
+  background: transparent !important;
+  color     : var(--rb-text) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §20 — PAGINATION
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .pagination > li > a,
+html.rizuki-reborn-active .pagination > li > span {
+  background  : var(--rb-surface) !important;
+  border-color: var(--rb-border) !important;
+  color       : var(--rb-text) !important;
+}
+html.rizuki-reborn-active .pagination > .active > a,
+html.rizuki-reborn-active .pagination > .active > span {
+  background  : var(--rb-primary) !important;
+  border-color: var(--rb-primary) !important;
+  color       : #fff !important;
+}
+html.rizuki-reborn-active .pagination > li > a:hover {
+  background: var(--rb-primary-light) !important;
+  color     : var(--rb-primary) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   §21 — SWEETALERT2 OVERRIDE
+──────────────────────────────────────────────────────────── */
+.swal2-popup {
+  font-family  : 'Poppins', sans-serif !important;
+  border-radius: var(--rb-r-xl) !important;
+}
+.swal2-title   { font-weight: 700 !important; }
+.swal2-confirm { border-radius: var(--rb-r-md) !important; font-weight: 600 !important; }
+.swal2-cancel  { border-radius: var(--rb-r-md) !important; font-weight: 600 !important; }
+.rb-swal-popup { font-family: 'Poppins', sans-serif !important; }
+.rb-swal-toast { font-family: 'Poppins', sans-serif !important; border-radius: var(--rb-r-lg) !important; }
+
+/* ────────────────────────────────────────────────────────────
+   §22 — RESPONSIVE
+──────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  :root { --rb-sidebar-w: 240px; }
+
+  .rb-profile-info   { display: none; }
+  .rb-chevron        { display: none; }
+  .rb-brand-text     { display: none; }
+  .rb-inbox-search   { width: 160px; }
+  .rb-login-card     { padding: 24px 20px; }
+  .rb-inbox-wrap     { padding: 0 16px 16px; }
+  .rb-ph-edit-btn    { margin-left: 0; width: 100%; justify-content: center; }
+
+  html.rizuki-reborn-active .content-wrapper,
+  html.rizuki-reborn-active .main-footer {
+    margin-left: 0 !important;
+  }
+  html.rizuki-reborn-active body.rb-sidebar-open .content-wrapper {
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .rb-inbox-search-wrap   { width: 100%; }
+  .rb-inbox-search        { width: 100%; }
+  .rb-login-card          { max-width: 100%; padding: 20px 16px; }
+  .rb-profile-hero-inner  { flex-direction: column; text-align: center; }
+  .rb-ph-name             { text-align: center !important; white-space: normal; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   §23 — TRANSITIONS (Theme switch smoothing)
+   NOTE: Only layout shells get background/color transitions.
+   Animations (spin, blob, strength bar) keep their own.
+──────────────────────────────────────────────────────────── */
+html.rizuki-reborn-active .rb-header,
+html.rizuki-reborn-active .main-sidebar,
+html.rizuki-reborn-active .rb-footer,
+html.rizuki-reborn-active .content-wrapper,
+html.rizuki-reborn-active .rb-dropdown,
+html.rizuki-reborn-active .rb-box,
+html.rizuki-reborn-active .box,
+html.rizuki-reborn-active table.table td,
+html.rizuki-reborn-active table.table th {
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease !important;
+}
+
+/* Do NOT inherit the generic transition on animated elements */
+html.rizuki-reborn-active .rb-blob           { transition: none !important; }
+html.rizuki-reborn-active .rb-spinner        { transition: none !important; }
+html.rizuki-reborn-active .reborn-pastel-card { transition: transform 0.3s ease, box-shadow 0.3s ease !important; }
+html.rizuki-reborn-active .rb-btn-submit      { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+html.rizuki-reborn-active .rb-captcha-refresh { transition: all 200ms ease !important; }
+html.rizuki-reborn-active .rb-strength-bar    { transition: width 0.3s ease, background 0.3s ease !important; }

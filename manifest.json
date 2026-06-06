@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "LMS Unindra Ultra Reborn",
+  "version": "5.0",
+  "description": "Total Overhaul UI/UX by RizukiDesz — v5.0 Clean & Stable",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://lms.unindra.ac.id/*"
+      ],
+      "css": [
+        "tailwind.css",
+        "style.css"
+      ],
+      "js": [
+        "sweetalert2.js",
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}

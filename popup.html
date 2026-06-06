@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="tailwind.css" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 300px;
+      background: #0f172a;
+      color: #f1f5f9;
+      font-family: -apple-system, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    .popup-header {
+      background: linear-gradient(135deg, #1e40af, #0ea5e9);
+      padding: 18px 20px 14px;
+      text-align: center;
+      position: relative;
+    }
+    .popup-logo {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; color: #fff;
+      margin: 0 auto 10px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .popup-title {
+      font-size: 16px; font-weight: 800;
+      color: #fff; letter-spacing: -0.3px;
+    }
+    .popup-subtitle {
+      font-size: 10px; color: rgba(255,255,255,0.6);
+      text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px;
+    }
+    .popup-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 10px; color: rgba(255,255,255,0.8);
+      margin-top: 6px;
+    }
+
+    /* Body */
+    .popup-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+
+    /* Toggle row */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .toggle-row:hover { background: #253348; }
+    .toggle-info { display: flex; flex-direction: column; gap: 2px; }
+    .toggle-label { font-size: 13px; font-weight: 600; color: #f1f5f9; }
+    .toggle-desc  { font-size: 11px; color: #64748b; }
+
+    /* Custom toggle switch */
+    .switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0;
+      background: #334155; border-radius: 12px;
+      cursor: pointer; transition: 0.2s;
+    }
+    .slider::before {
+      content: '';
+      position: absolute; width: 18px; height: 18px;
+      left: 3px; bottom: 3px;
+      background: #94a3b8; border-radius: 50%;
+      transition: 0.2s;
+    }
+    .switch input:checked + .slider { background: #3b82f6; }
+    .switch input:checked + .slider::before {
+      transform: translateX(18px);
+      background: #fff;
+    }
+
+    /* Status indicator */
+    .status-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 8px; padding: 8px 12px;
+      font-size: 11.5px; color: #94a3b8;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+    .dot.inactive { background: #475569; }
+
+    /* Apply button */
+    .apply-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #3b82f6, #0ea5e9);
+      border: none; border-radius: 10px;
+      color: #fff; font-size: 13px; font-weight: 700;
+      padding: 12px; cursor: pointer;
+      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .apply-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59,130,246,0.4); }
+    .apply-btn:active { transform: none; }
+
+    /* Footer */
+    .popup-footer {
+      padding: 10px 16px 14px;
+      text-align: center;
+      border-top: 1px solid #1e293b;
+    }
+    .popup-footer-text { font-size: 10.5px; color: #475569; }
+    .popup-footer-text a {
+      color: #60a5fa; text-decoration: none; font-weight: 600;
+    }
+    .popup-footer-text a:hover { color: #93c5fd; }
+
+    /* Divider */
+    .divider { height: 1px; background: #1e293b; }
+
+    /* Feedback notice */
+    .notice {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 8px; padding: 8px 12px;
+      font-size: 11px; color: #60a5fa; line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="popup-header">
+    <div class="popup-logo">U</div>
+    <div class="popup-title">LMS Ultra Reborn</div>
+    <div class="popup-subtitle">Control Panel</div>
+    <div class="popup-badge">v5.0 — by RizukiDesz</div>
+  </div>
+
+  <div class="popup-body">
+
+    <!-- Status -->
+    <div class="status-badge" id="statusBadge">
+      <div class="dot" id="statusDot"></div>
+      <span id="statusText">Ekstensi aktif di halaman ini</span>
+    </div>
+
+    <!-- Dark mode toggle -->
+    <div class="toggle-row" onclick="document.getElementById('toggleDark').click()">
+      <div class="toggle-info">
+        <div class="toggle-label" id="modeLabel">Mode Terang</div>
+        <div class="toggle-desc" id="modeDesc">Default: tampilan terang & bersih</div>
+      </div>
+      <label class="switch" onclick="event.stopPropagation()">
+        <input type="checkbox" id="toggleDark" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Apply button -->
+    <button class="apply-btn" id="applyBtn">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Terapkan &amp; Muat Ulang
+    </button>
+
+    <div class="notice">
+      💡 Refresh halaman jika tampilan belum berubah. Tema default adalah <strong>Light Mode</strong>.
+    </div>
+
+  </div>
+
+  <div class="popup-footer">
+    <div class="popup-footer-text">
+      Designed by <a href="https://www.rizuku.my.id/" target="_blank">RizukiDesz</a>
+      &bull; LMS Unindra
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
